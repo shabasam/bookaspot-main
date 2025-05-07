@@ -18,5 +18,4 @@ const PhotoSchema = new Schema<IPhoto>({
   createdAt: { type: Date, default: Date.now },
 })
 
-// Check if the model is already defined to prevent overwriting during hot reloads
 export const Photo = (mongoose.models.Photo || mongoose.model<IPhoto>("Photo", PhotoSchema)) as Model<IPhoto>

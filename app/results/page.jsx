@@ -71,12 +71,10 @@ const SearchResults = () => {
 
       
 
-      {/* Search Info */}
       <p className="p-6 pt-10 text-2xl">
         Showing search results for "{eventType}" in "{location}"
       </p>
 
-      {/* Results */}
       {error && <p className="text-red-400 text-center">{error}</p>}
       <div className="container mx-auto">
         {results.length > 0 ? (
@@ -106,8 +104,6 @@ const SearchResults = () => {
                 <p className="text-2xl">₹{venue.cost}</p>
                 <div className="flex flex-wrap gap-2 mt-2 text-xs">
                   <p className="bg-gray-700 p-1 rounded">{venue.capacity} Guests</p>
-                  {/* You might want to display more capacity details if available */}
-                  {/* <p className="bg-gray-700 p-1 rounded underline">+2 more</p> */}
                 </div>
               </div>
             ))}

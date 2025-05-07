@@ -23,17 +23,15 @@ export default function UserLogin() {
     if (res?.error) {
       setError("Invalid email or password");
     } else {
-      router.push("/"); // Redirect to homepage
+      router.push("/"); 
     }
   };
 
   return (
     <div className="flex justify-center items-center min-h-screen bg-gray-950">
       <div className="grid grid-cols-2 w-[1100px] h-[700px] shadow-2xl rounded-lg overflow-hidden">
-        {/* Left side image */}
         <div className="bg-blue-100 bg-loginImg bg-cover"></div>
 
-        {/* Right side login form */}
         <div className="flex flex-col justify-center items-center p-6 bg-gray-900 w-full">
           <h1 className="text-2xl font-extrabold mb-6 text-white">BOOKaSPOT</h1>
           <h2 className="text-lg font-bold mb-4 text-gray-300">Customer Login</h2>

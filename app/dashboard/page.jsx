@@ -9,7 +9,7 @@ import { format, isToday, getMonth } from "date-fns"
 import ReservationCard from "../../components/ReservationCard"
 import Navbar from "../../components/Navbar_vendor"
 import BookingRequestCard from "../../components/BookingRequestCard"
-import "../booking/booking.css" // Import the calendar styles
+import "../booking/booking.css" 
 
 export default function Dashboard() {
   const { data: session, status } = useSession()
@@ -25,7 +25,6 @@ export default function Dashboard() {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
 
-  // Calendar state
   const [months, setMonths] = useState([])
   const [selectedMonth, setSelectedMonth] = useState(null)
   const [bookings, setBookings] = useState([])
@@ -37,7 +36,6 @@ export default function Dashboard() {
 
   
 
-  // Initialize months array
   useEffect(() => {
     const monthsArray = Array.from({ length: 12 }, (_, i) => {
       const now = new Date()
@@ -64,7 +62,6 @@ export default function Dashboard() {
 
         const data = await response.json()
 
-        // Set the first venue ID
         if (data.length > 0) {
           setVenueId(data[0]._id)
         }
@@ -88,12 +85,10 @@ export default function Dashboard() {
     const fetchBookings = async () => {
       setIsLoading(true)
       try {
-        // Get today's date and format it
         const today = new Date()
         const startOfMonth = new Date(today.getFullYear(), today.getMonth(), 1)
         const endOfMonth = new Date(today.getFullYear(), today.getMonth() + 1, 0)
 
-        // Fetch all bookings
         const response = await fetch(`/api/bookings`)
 
         if (!response.ok) {
@@ -103,11 +98,9 @@ export default function Dashboard() {
         const allBookings = await response.json()
         setBookings(allBookings)
 
-        // Filter pending bookings
         const pending = allBookings.filter((b) => b.status === "pending")
         setPendingBookings(pending)
 
-        // Calculate stats
         const todayBookings = allBookings.filter((b) => {
           const bookingDate = new Date(b.date)
           return bookingDate.toDateString() === today.toDateString() && b.status === "accepted"
@@ -154,7 +147,6 @@ export default function Dashboard() {
         throw new Error("Failed to accept booking")
       }
 
-      // Update UI
       setPendingBookings((prev) => prev.filter((b) => b._id !== bookingId))
       setBookingStats((prev) => ({
         ...prev,
@@ -162,7 +154,6 @@ export default function Dashboard() {
         upcoming: prev.upcoming,
       }))
 
-      // Update bookings list
       setBookings((prev) => prev.map((b) => (b._id === bookingId ? { ...b, status: "accepted" } : b)))
 
       alert("Booking accepted successfully")
@@ -186,14 +177,12 @@ export default function Dashboard() {
         throw new Error("Failed to reject booking")
       }
 
-      // Update UI
       setPendingBookings((prev) => prev.filter((b) => b._id !== bookingId))
       setBookingStats((prev) => ({
         ...prev,
         pending: prev.pending - 1,
       }))
 
-      // Update bookings list
       setBookings((prev) => prev.map((b) => (b._id === bookingId ? { ...b, status: "rejected" } : b)))
 
       alert("Booking rejected successfully")
@@ -228,7 +217,6 @@ export default function Dashboard() {
 
       const newBlocked = await response.json()
 
-      // Update local state
       setBookings((prev) => [...prev, newBlocked])
 
       alert(`Date ${formatted} has been blocked`)
@@ -256,7 +244,6 @@ export default function Dashboard() {
 
     if (booking) {
       if (booking.status === "blocked" && window.confirm(`Unblock date ${format(date, "yyyy-MM-dd")}?`)) {
-        // Delete the blocked date
         fetch(`/api/bookings/${booking._id}`, { method: "DELETE" })
           .then((response) => {
             if (!response.ok) throw new Error("Failed to unblock date")
@@ -271,13 +258,11 @@ export default function Dashboard() {
             setError("Failed to unblock date. Please try again.")
           })
       } else {
-        // Just show booking info for other statuses
         alert(
           `This date is ${booking.status}.\nCustomer: ${booking.customerName || "N/A"}\nNotes: ${booking.notes || "None"}`,
         )
       }
     } else {
-      // If date is free, show block modal
       setDateToBlock(date)
       setShowBlockModal(true)
     }
@@ -325,7 +310,6 @@ export default function Dashboard() {
           </section>
         )}
 
-        {/* Calendar Section */}
         <section className="mt-8">
           <div className="flex justify-between items-center mb-4">
             
@@ -339,7 +323,6 @@ export default function Dashboard() {
 
           {showCalendar && (
             <div className="mt-4">
-              {/* Calendar Legend */}
               <div className="w-full mb-6 text-black p-4 bg-white rounded-lg shadow">
                 <h3 className="font-semibold text-black mb-2">Calendar Legend:</h3>
                 <div className="grid grid-cols-2 gap-2">
@@ -404,7 +387,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Month Detail Modal */}
           {selectedMonth && (
             <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
               <div className="bg-white p-6 rounded-lg shadow-lg w-[350px]">
@@ -425,7 +407,6 @@ export default function Dashboard() {
                     return "free-date"
                   }}
                   tileDisabled={({ date }) => {
-                    // Only disable dates not in this month
                     return getMonth(date) !== getMonth(selectedMonth)
                   }}
                   showNavigation={false}
@@ -455,7 +436,6 @@ export default function Dashboard() {
             </div>
           )}
 
-          {/* Block Date Modal */}
           {showBlockModal && (
             <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
               <div className="bg-white p-6 rounded-lg shadow-lg w-[350px]">

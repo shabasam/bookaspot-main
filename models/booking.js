@@ -44,7 +44,6 @@ const bookingSchema = new Schema(
   { timestamps: true },
 )
 
-// Create a compound index to prevent double bookings
 bookingSchema.index({ venueId: 1, date: 1 }, { unique: true })
 
 const Booking = mongoose.models?.Booking || mongoose.model("Booking", bookingSchema)

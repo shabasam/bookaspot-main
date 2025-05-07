@@ -10,15 +10,10 @@ const NotificationSystem = () => {
   useEffect(() => {
     if (!session) return
 
-    // This would be replaced with your actual notification fetching logic
+    
     const fetchNotifications = async () => {
       try {
-        // Example API call to get notifications
-        // const response = await fetch('/api/notifications')
-        // const data = await response.json()
-        // setNotifications(data)
-
-        // For now, we'll use dummy data
+        
         if (session.user.role === "customer") {
           setNotifications([
             {
@@ -30,7 +25,7 @@ const NotificationSystem = () => {
             {
               id: 2,
               message: "Your booking for Convention Center B has been cancelled by the vendor",
-              date: new Date(Date.now() - 86400000), // 1 day ago
+              date: new Date(Date.now() - 86400000), 
               read: false,
             },
           ])
@@ -51,8 +46,8 @@ const NotificationSystem = () => {
 
     fetchNotifications()
 
-    // Set up polling for new notifications
-    const interval = setInterval(fetchNotifications, 60000) // Check every minute
+    
+    const interval = setInterval(fetchNotifications, 60000) 
 
     return () => clearInterval(interval)
   }, [session])

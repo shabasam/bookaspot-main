@@ -9,12 +9,10 @@ export async function POST(req) {
 
     const { name, email, phone, password } = await req.json();
 
-    // Check if required fields are present
     if (!name || !email || !phone || !password) {
       return NextResponse.json({ error: "All fields are required." }, { status: 400 });
     }
 
-    // Hash password before saving
     const hashedPassword = await bcrypt.hash(password, 10);
 
     const newCustomer = new Customer({

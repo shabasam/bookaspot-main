@@ -21,7 +21,6 @@ const VendorBookingCalendar = () => {
   const [dateToBlock, setDateToBlock] = useState(null)
   const [blockNote, setBlockNote] = useState("")
 
-  // Initialize months array
   useEffect(() => {
     const monthsArray = Array.from({ length: 12 }, (_, i) => {
       const now = new Date()
@@ -30,7 +29,6 @@ const VendorBookingCalendar = () => {
     setMonths(monthsArray)
   }, [])
 
-  // Fetch venue for this vendor
   useEffect(() => {
     if (status === "loading") return
 
@@ -49,7 +47,6 @@ const VendorBookingCalendar = () => {
 
         const data = await response.json()
 
-        // Set the first venue ID
         if (data.length > 0) {
           setVenueId(data[0]._id)
         }
@@ -62,14 +59,12 @@ const VendorBookingCalendar = () => {
     fetchVenue()
   }, [status, router, session])
 
-  // Fetch bookings when venue ID is available
   useEffect(() => {
     if (!venueId || status !== "authenticated") return
 
     const fetchBookings = async () => {
       setIsLoading(true)
       try {
-        // Calculate date range for the next 12 months
         const startDate = new Date()
         const endDate = new Date()
         endDate.setMonth(endDate.getMonth() + 12)
@@ -120,7 +115,6 @@ const VendorBookingCalendar = () => {
 
       const newBlocked = await response.json()
 
-      // Update local state
       setBookings((prev) => [...prev, newBlocked])
 
       alert(`Date ${formatted} has been blocked`)
@@ -148,7 +142,6 @@ const VendorBookingCalendar = () => {
 
     if (booking) {
       if (booking.status === "blocked" && window.confirm(`Unblock date ${format(date, "yyyy-MM-dd")}?`)) {
-        // Delete the blocked date
         fetch(`/api/bookings/${booking._id}`, { method: "DELETE" })
           .then((response) => {
             if (!response.ok) throw new Error("Failed to unblock date")
@@ -163,13 +156,11 @@ const VendorBookingCalendar = () => {
             setError("Failed to unblock date. Please try again.")
           })
       } else {
-        // Just show booking info for other statuses
         alert(
           `This date is ${booking.status}.\nCustomer: ${booking.customerName || "N/A"}\nNotes: ${booking.notes || "None"}`,
         )
       }
     } else {
-      // If date is free, show block modal
       setDateToBlock(date)
       setShowBlockModal(true)
     }
@@ -181,7 +172,6 @@ const VendorBookingCalendar = () => {
     <div className="flex flex-col items-center">
       {error && <div className="bg-red-100 border border-red-400 text-red-700 px-4 py-3 rounded mb-4">{error}</div>}
 
-      {/* Calendar Legend */}
       <div className="w-full max-w-md text-black mb-6 p-4 bg-white rounded-lg shadow">
         <h3 className="font-semibold mb-2">Calendar Legend:</h3>
         <div className="grid grid-cols-2 gap-2">
@@ -253,7 +243,6 @@ const VendorBookingCalendar = () => {
                   return "free-date"
                 }}
                 tileDisabled={({ date }) => {
-                  // Only disable dates not in this month
                   return getMonth(date) !== getMonth(selectedMonth)
                 }}
                 showNavigation={false}
@@ -283,7 +272,6 @@ const VendorBookingCalendar = () => {
           </div>
         )}
 
-        {/* Block Date Modal */}
         {showBlockModal && (
           <div className="fixed inset-0 bg-black/30 flex items-center justify-center z-50">
             <div className="bg-white p-6 rounded-lg shadow-lg w-[350px]">

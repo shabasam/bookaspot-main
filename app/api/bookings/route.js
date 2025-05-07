@@ -5,7 +5,6 @@ import Booking from "../../../models/booking"
 import UserInfo from "../../../models/UserInfo"
 import { authOptions } from "../auth/[...nextauth]/route"
 
-// GET all bookings for a venue or customer
 export async function GET(request) {
   try {
     const session = await getServerSession(authOptions)
@@ -23,17 +22,14 @@ export async function GET(request) {
 
     const query = {}
 
-    // Filter by venue if provided
     if (venueId) {
       query.venueId = venueId
     }
 
-    // Filter by customer if provided
     if (customerId) {
       query.customerId = customerId
     }
 
-    // Filter by date range if provided
     if (startDate && endDate) {
       query.date = {
         $gte: new Date(startDate),
@@ -41,16 +37,12 @@ export async function GET(request) {
       }
     }
 
-    // If user is a vendor, only show their venues' bookings
     if (session.user.role === "vendor") {
-      // Get all venues owned by this vendor
       const venues = await UserInfo.find({ userId: session.user._id })
       const venueIds = venues.map((venue) => venue._id)
 
-      // Add venue filter to query
       query.venueId = { $in: venueIds }
     }
-    // If user is a customer, only show their bookings
     else if (session.user.role === "customer") {
       query.customerId = session.user._id
     }
@@ -64,7 +56,6 @@ export async function GET(request) {
   }
 }
 
-// POST create a new booking
 export async function POST(request) {
   try {
     const session = await getServerSession(authOptions)
@@ -80,7 +71,6 @@ export async function POST(request) {
 
     await connectMongoDB()
 
-    // Check if date is already booked or blocked
     const existingBooking = await Booking.findOne({
       venueId,
       date: new Date(date),
@@ -90,7 +80,6 @@ export async function POST(request) {
       return NextResponse.json({ error: "This date is already booked or blocked" }, { status: 400 })
     }
 
-    // Create new booking
     const booking = await Booking.create({
       venueId,
       venueName,

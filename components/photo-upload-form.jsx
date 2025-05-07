@@ -18,10 +18,10 @@ export default function PhotoUploadForm() {
       const selectedFiles = Array.from(e.target.files);
       setFiles(selectedFiles);
 
-      // Create previews
+      
       const newPreviews = selectedFiles.map((file) => URL.createObjectURL(file));
       setPreviews((prev) => {
-        // Revoke old preview URLs to avoid memory leaks
+        
         prev.forEach((url) => URL.revokeObjectURL(url));
         return newPreviews;
       });

@@ -3,7 +3,6 @@ import { authOptions } from "../../../app/api/auth/[...nextauth]/route";
 import { connectMongoDB } from "../../../lib/mongodb";
 import UserInfo from "../../../models/UserInfo";
 
-// Fetch User Info (GET)
 export async function GET(req) {
   const session = await getServerSession(authOptions);
   if (!session || !session.user?._id) {
@@ -16,7 +15,6 @@ export async function GET(req) {
   return new Response(JSON.stringify(userInfo || {}), { status: 200 });
 }
 
-// Create or Update User Info (POST & PUT)
 export async function POST(req) {
   return handleSave(req);
 }
@@ -38,11 +36,9 @@ async function handleSave(req) {
     const existingUser = await UserInfo.findOne({ userId: session.user._id });
 
     if (existingUser) {
-      // Update existing record
       await UserInfo.updateOne({ userId: session.user._id }, { conventionCenter, capacity, contact, cost, gmap, address, typeofevent });
       return new Response(JSON.stringify({ message: "User info updated successfully" }), { status: 200 });
     } else {
-      // Create new record
       const newUserInfo = new UserInfo({ userId: session.user._id, name: session.user.name, email: session.user.email, conventionCenter, capacity, contact, cost, gmap, address, typeofevent });
       await newUserInfo.save();
       return new Response(JSON.stringify({ message: "User info saved successfully" }), { status: 201 });

@@ -102,13 +102,11 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
     setProgress(0)
 
     try {
-      // Create a panorama by stitching wall images side by side
       const panoramaImage = await createSimplePanorama(wallPreviews, ceilingPreview, floorPreview)
       setProgress(100)
       setPanoramaPreview(panoramaImage)
       setIsUploading(false)
 
-      // Call the callback function with the generated panorama URL
       onPanoramaGenerated(panoramaImage)
 
       toast({
@@ -126,29 +124,23 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
     }
   }
 
-  // Initialize the 360° viewer when the dialog is opened
   useEffect(() => {
     if (!showViewer || !panoramaPreview || !viewerRef.current) return
 
-    // Create a loading indicator
     const loadingDiv = document.createElement("div")
     loadingDiv.className = "absolute inset-0 flex items-center justify-center bg-black/50 text-white"
     loadingDiv.innerHTML =
       '<div class="text-center"><div class="animate-spin rounded-full h-12 w-12 border-t-2 border-b-2 border-white mx-auto mb-4"></div><p>Loading 360° viewer...</p></div>'
     viewerRef.current.appendChild(loadingDiv)
 
-    // Load the pannellum script and stylesheet
     const loadPannellum = async () => {
       try {
-        // Check if Pannellum is already loaded
         if (!window.pannellum) {
-          // Load CSS
           const link = document.createElement("link")
           link.rel = "stylesheet"
           link.href = "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"
           document.head.appendChild(link)
 
-          // Load JS
           await new Promise((resolve, reject) => {
             const script = document.createElement("script")
             script.src = "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"
@@ -159,7 +151,6 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
           })
         }
 
-        // Wait a moment to ensure everything is loaded
         setTimeout(() => {
           initializeViewer()
           if (loadingDiv.parentNode) {
@@ -185,11 +176,9 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
         return
       }
 
-      // Clear the viewer container first
       viewerRef.current.innerHTML = ""
 
       try {
-        // Initialize the viewer with enhanced settings for a spatial view
         pannellumInstance.current = window.pannellum.viewer(viewerRef.current, {
           type: "equirectangular",
           panorama: panoramaPreview,
@@ -238,11 +227,9 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
     }
   }, [showViewer, panoramaPreview, toast])
 
-  // Simplified panorama creation - just stitch images side by side
   const createSimplePanorama = async (wallImages, ceilingImage, floorImage) => {
     return new Promise((resolve, reject) => {
       try {
-        // Create a canvas for the equirectangular panorama
         const canvas = document.createElement("canvas")
         const ctx = canvas.getContext("2d")
 
@@ -251,22 +238,18 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
           return
         }
 
-        // Set timeout to prevent browser hanging
         const timeout = setTimeout(() => {
           reject(new Error("Panorama creation timed out"))
-        }, 30000) // 30 seconds timeout
+        }, 30000) 
 
-        // Standard equirectangular ratio is 2:1 (360° horizontal by 180° vertical)
         canvas.width = 4096
         canvas.height = 2048
 
-        // Fill with black background
         ctx.fillStyle = "#000000"
         ctx.fillRect(0, 0, canvas.width, canvas.height)
 
         setProgress(20)
 
-        // Load all wall images
         const loadImage = (src) => {
           return new Promise((resolve) => {
             const img = new Image()
@@ -276,32 +259,26 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
           })
         }
 
-        // Load all images in parallel
         Promise.all(wallImages.map((src) => loadImage(src)))
           .then((images) => {
             setProgress(50)
 
-            // Calculate the width of each wall segment
             const segmentWidth = canvas.width / images.length
 
-            // Draw wall images in sequence - ensure they cover the middle section properly
             images.forEach((img, i) => {
               const x = i * segmentWidth
-              const y = canvas.height / 4 // Start at 1/4 from the top
-              const height = canvas.height / 2 // Middle half of the canvas
+              const y = canvas.height / 4 
+              const height = canvas.height / 2 
 
-              // Draw the image, stretching it to fill its segment
               ctx.drawImage(img, x, y, segmentWidth, height)
             })
 
             setProgress(80)
 
-            // Add ceiling and floor if available
             const processCeilingAndFloor = async () => {
               if (ceilingImage) {
                 try {
                   const ceilingImg = await loadImage(ceilingImage)
-                  // Draw ceiling at the top quarter - stretch to fill the width
                   ctx.drawImage(ceilingImg, 0, 0, canvas.width, canvas.height / 4)
                 } catch (e) {
                   console.error("Error loading ceiling image:", e)
@@ -311,17 +288,14 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
               if (floorImage) {
                 try {
                   const floorImg = await loadImage(floorImage)
-                  // Draw floor at the bottom quarter - stretch to fill the width
                   ctx.drawImage(floorImg, 0, (canvas.height * 3) / 4, canvas.width, canvas.height / 4)
                 } catch (e) {
                   console.error("Error loading floor image:", e)
                 }
               }
 
-              // Finalize the panorama
               clearTimeout(timeout)
 
-              // Convert to a high-quality JPEG
               const panoramaDataUrl = canvas.toDataURL("image/jpeg", 0.9)
               resolve(panoramaDataUrl)
             }
@@ -350,7 +324,6 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
       return
     }
 
-    // Create a new window for the viewer
     const viewerWindow = window.open("", "_blank")
 
     if (!viewerWindow) {
@@ -362,7 +335,6 @@ export default function View360Generator({ onPanoramaGenerated, conventionCenter
       return
     }
 
-    // Write the HTML content for the viewer
     viewerWindow.document.write(`
       <!DOCTYPE html>
       <html>

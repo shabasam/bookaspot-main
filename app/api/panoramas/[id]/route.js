@@ -18,14 +18,12 @@ export async function GET(req, { params }) {
 
     await connectMongoDB()
 
-    // Find the user info document
     const userInfo = await UserInfo.findOne({ userId: session.user._id })
 
     if (!userInfo) {
       return NextResponse.json({ error: "User info not found" }, { status: 404 })
     }
 
-    // Find the panorama in the panoramas array
     const panorama = userInfo.panoramas?.find((p) => p._id.toString() === panoramaId)
 
     if (!panorama) {

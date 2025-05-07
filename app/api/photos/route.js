@@ -6,7 +6,6 @@ export async function GET() {
   try {
     await connectToDatabase()
 
-    // Get all photos, sorted by creation date (newest first)
     const photos = await Photo.find().sort({ createdAt: -1 })
 
     return NextResponse.json({ success: true, photos })

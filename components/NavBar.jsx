@@ -5,7 +5,7 @@ import React from "react";
 import { signOut, useSession } from "next-auth/react";
 
 const NavBar = () => {
-  const { data: session, status } = useSession(); // session contains user info
+  const { data: session, status } = useSession(); 
 
   return (
     <nav className="bg-black p-4">

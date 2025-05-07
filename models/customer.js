@@ -1,4 +1,3 @@
-// models/customer.js
 import mongoose, { Schema } from "mongoose";
 
 const customerSchema = new Schema(
@@ -17,14 +16,13 @@ const customerSchema = new Schema(
       required: true,
     },
     phone: {
-      type: String, // or Number, but String is safer for mobile numbers
+      type: String, 
       required: true,
     },
   },
   { timestamps: true }
 );
 
-// Avoid model overwrite error in development
 const Customer = mongoose.models.Customer || mongoose.model("Customer", customerSchema);
 
 export default Customer;

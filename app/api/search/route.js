@@ -4,7 +4,6 @@ import UserInfo from "../../../models/UserInfo";
 
 export async function GET(req) {
   try {
-    // Connect to MongoDB
     await connectMongoDB(); 
 
     const { searchParams } = new URL(req.url);

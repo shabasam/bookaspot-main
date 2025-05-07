@@ -47,18 +47,14 @@ export default function View360Page() {
   useEffect(() => {
     if (loading || !panorama?.panoramaImage || !viewerRef.current) return
 
-    // Load the pannellum script and stylesheet
     const loadPannellum = async () => {
       try {
-        // Check if Pannellum is already loaded
         if (!window.pannellum) {
-          // Load CSS
           const link = document.createElement("link")
           link.rel = "stylesheet"
           link.href = "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.css"
           document.head.appendChild(link)
 
-          // Load JS
           await new Promise((resolve, reject) => {
             const script = document.createElement("script")
             script.src = "https://cdn.jsdelivr.net/npm/pannellum@2.5.6/build/pannellum.js"
@@ -69,7 +65,6 @@ export default function View360Page() {
           })
         }
 
-        // Wait a moment to ensure everything is loaded
         setTimeout(() => {
           initializeViewer()
         }, 500)
@@ -90,7 +85,6 @@ export default function View360Page() {
       }
 
       try {
-        // Initialize the viewer with enhanced settings for a spatial view
         pannellumInstance.current = window.pannellum.viewer(viewerRef.current, {
           type: "equirectangular",
           panorama: panorama.panoramaImage,

@@ -5,7 +5,7 @@ import { MapPin, Phone, Eye } from "lucide-react";
 import Link from "next/link";
 import Image from "next/image";
 import { useState, useEffect } from "react";
-import PanoramaViewer from "../../components/PanoramaViewer"; // Import the PanoramaViewer component
+import PanoramaViewer from "../../components/PanoramaViewer"; 
 
 export default function VenueDetails() {
   const searchParams = useSearchParams();
@@ -22,7 +22,7 @@ export default function VenueDetails() {
   const [error, setError] = useState(null);
   const [showAllPhotos, setShowAllPhotos] = useState(false);
   const [selectedImage, setSelectedImage] = useState(null);
-  const [panoramaImage, setPanoramaImage] = useState(null); // Add state for panorama image
+  const [panoramaImage, setPanoramaImage] = useState(null); 
 
   useEffect(() => {
     if (!id) {
@@ -35,7 +35,6 @@ export default function VenueDetails() {
       setLoading(true);
       setError(null);
       try {
-        // Fetch venue details
         const response = await fetch(`/api/venues/${id}`);
         if (!response.ok) {
           const message = `An error occurred: ${response.status}`;
@@ -44,9 +43,7 @@ export default function VenueDetails() {
         const data = await response.json();
         setVenueDetails(data);
 
-        // Check if the venue has panoramas
         if (data.panoramas && data.panoramas.length > 0) {
-          // Get the first panorama or the most recent one
           setPanoramaImage(data.panoramas[0].panoramaImage);
         }
       } catch (err) {
@@ -86,7 +83,6 @@ export default function VenueDetails() {
       </div>
 
       <div className="max-w-4xl mx-auto mt-10 bg-white rounded-xl shadow-lg overflow-hidden">
-        {/* Display images */}
         <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-4 p-4">
           {displayedPhotos.length > 0 ? (
             displayedPhotos.map((photo) => (
@@ -181,7 +177,6 @@ export default function VenueDetails() {
             </div>
 
             <div className="flex gap-2 text-black">
-              {/* 360° View Button - Only show if panorama is available */}
               {panoramaImage && (
                 <PanoramaViewer 
                   panoramaImage={panoramaImage} 
@@ -200,7 +195,6 @@ export default function VenueDetails() {
         </div>
       </div>
 
-      {/* Image Enlargement Modal */}
       {selectedImage && (
         <div className="fixed top-0 left-0 w-full h-full bg-black bg-opacity-80 z-50 flex justify-center items-center cursor-pointer" onClick={handleCloseModal}>
           <Image

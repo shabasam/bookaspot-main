@@ -1,6 +1,5 @@
 import mongoose from "mongoose";
 
-// Define the embedded photo schema
 const PhotoSchema = new mongoose.Schema(
   {
     url: { type: String, required: true },
@@ -10,18 +9,17 @@ const PhotoSchema = new mongoose.Schema(
     format: { type: String, required: true },
     createdAt: { type: Date, default: Date.now },
   },
-  { _id: false } // Optional: prevents auto-generating `_id` for each photo
+  { _id: false } 
 );
 
-// Add panorama schema for 360° views
 const PanoramaSchema = new mongoose.Schema(
   {
     name: { type: String, required: true },
     description: { type: String },
-    panoramaImage: { type: String, required: true }, // Base64 or URL to the panorama image
-    wallImages: [String], // Array of wall image URLs or base64 strings
-    ceilingImage: { type: String }, // URL or base64 of ceiling image
-    floorImage: { type: String }, // URL or base64 of floor image
+    panoramaImage: { type: String, required: true }, 
+    wallImages: [String], 
+    ceilingImage: { type: String }, 
+    floorImage: { type: String }, 
     createdAt: { type: Date, default: Date.now },
   },
   { _id: false }
@@ -41,10 +39,8 @@ const UserInfoSchema = new mongoose.Schema(
     
     
 
-    // ✅ Add embedded photos array
     photos: [PhotoSchema],
 
-    // Add panoramas array for 360° views
     panoramas: [PanoramaSchema],
   },
   { timestamps: true }

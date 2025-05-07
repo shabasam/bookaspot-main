@@ -1,4 +1,3 @@
-// /app/api/venues/[id]/route.js
 import { connectMongoDB } from "../../../../lib/mongodb";
 import UserInfo from "../../../../models/UserInfo";
 import { NextResponse } from "next/server";
@@ -8,7 +7,7 @@ export async function GET(request, { params }) {
 
   try {
     await connectMongoDB();
-    const venue = await UserInfo.findById(id).populate('userId'); // Optionally populate the user details
+    const venue = await UserInfo.findById(id).populate('userId'); 
     if (!venue) {
       return NextResponse.json({ message: "Venue not found" }, { status: 404 });
     }

@@ -26,7 +26,6 @@ export async function POST(req) {
       return NextResponse.json({ error: "User info not found" }, { status: 404 })
     }
 
-    // Add the panorama to the panoramas array
     userInfo.panoramas = userInfo.panoramas || []
     userInfo.panoramas.push({
       name: panorama.name || "Untitled Panorama",
@@ -38,10 +37,8 @@ export async function POST(req) {
       createdAt: new Date()
     })
 
-    // Save the updated user info
     await userInfo.save()
 
-    // Return the newly added panorama
     const newPanorama = userInfo.panoramas[userInfo.panoramas.length - 1]
 
     return NextResponse.json({ 
@@ -69,14 +66,12 @@ export async function GET(req) {
 
     await connectMongoDB()
 
-    // Find the user info document
     const userInfo = await UserInfo.findOne({ userId: session.user._id })
 
     if (!userInfo) {
       return NextResponse.json({ error: "User info not found" }, { status: 404 })
     }
 
-    // Return all panoramas or filter by convention center ID
     const panoramas = userInfo.panoramas || []
     
     return NextResponse.json({ 

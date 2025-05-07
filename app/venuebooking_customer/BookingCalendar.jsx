@@ -20,7 +20,6 @@ const CustomerBookingCalendar = () => {
   const [isLoading, setIsLoading] = useState(true)
   const [error, setError] = useState("")
 
-  // Initialize months array
   useEffect(() => {
     const monthsArray = Array.from({ length: 12 }, (_, i) => {
       const now = new Date()
@@ -29,7 +28,6 @@ const CustomerBookingCalendar = () => {
     setMonths(monthsArray)
   }, [])
 
-  // Fetch bookings for this venue
   useEffect(() => {
     if (!venueId || status === "loading") return
 
@@ -41,7 +39,6 @@ const CustomerBookingCalendar = () => {
     const fetchBookings = async () => {
       setIsLoading(true)
       try {
-        // Calculate date range for the next 12 months
         const startDate = new Date()
         const endDate = new Date()
         endDate.setMonth(endDate.getMonth() + 12)
@@ -80,7 +77,6 @@ const CustomerBookingCalendar = () => {
 
     const formatted = format(date, "yyyy-MM-dd")
 
-    // Check if date is already booked
     const isDateBooked = bookings.some((booking) => format(new Date(booking.date), "yyyy-MM-dd") === formatted)
 
     
@@ -105,7 +101,6 @@ const CustomerBookingCalendar = () => {
 
       const newBooking = await response.json()
 
-      // Update local state
       setBookings((prev) => [...prev, newBooking])
 
       alert(`Booking request sent for ${formatted}`)
@@ -172,9 +167,7 @@ const CustomerBookingCalendar = () => {
                 return classes.trim()
               }}
               tileDisabled={({ date }) => {
-                // Disable past dates
                 if (date < new Date()) return true
-                // Disable dates not in this month
                 return getMonth(date) !== getMonth(month)
               }}
               showNavigation={false}
@@ -193,12 +186,9 @@ const CustomerBookingCalendar = () => {
                 defaultActiveStartDate={selectedMonth}
                 onClickDay={bookDate}
                 tileDisabled={({ date }) => {
-                  // Disable past dates
                   if (date < new Date()) return true
-                  // Disable already booked dates
                   const status = getStatus(date)
                   if (status !== "free") return true
-                  // Disable dates not in this month
                   return getMonth(date) !== getMonth(selectedMonth)
                 }}
                 tileClassName={({ date }) => {

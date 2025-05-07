@@ -5,7 +5,6 @@ import Booking from "../../../../models/booking"
 import UserInfo from "../../../../models/UserInfo"
 import { authOptions } from "../../auth/[...nextauth]/route"
 
-// GET a specific booking
 export async function GET(request, { params }) {
   try {
     const session = await getServerSession(authOptions)
@@ -23,9 +22,7 @@ export async function GET(request, { params }) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 })
     }
 
-    // Check if user has permission to view this booking
     if (session.user.role === "vendor") {
-      // Get all venues owned by this vendor
       const venues = await UserInfo.find({ userId: session.user._id })
       const venueIds = venues.map((venue) => venue._id.toString())
 
@@ -43,7 +40,6 @@ export async function GET(request, { params }) {
   }
 }
 
-// PATCH update a booking status
 export async function PATCH(request, { params }) {
   try {
     const session = await getServerSession(authOptions)
@@ -62,9 +58,7 @@ export async function PATCH(request, { params }) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 })
     }
 
-    // Only vendors can update booking status
     if (session.user.role === "vendor") {
-      // Get all venues owned by this vendor
       const venues = await UserInfo.find({ userId: session.user._id })
       const venueIds = venues.map((venue) => venue._id.toString())
 
@@ -72,14 +66,11 @@ export async function PATCH(request, { params }) {
         return NextResponse.json({ error: "Unauthorized" }, { status: 401 })
       }
 
-      // Update booking
       booking.status = status || booking.status
       if (notes) booking.notes = notes
 
       await booking.save()
 
-      // TODO: If status is "cancelled", send notification to customer
-      // This would be implemented with your notification system
 
       return NextResponse.json(booking)
     }
@@ -91,7 +82,6 @@ export async function PATCH(request, { params }) {
   }
 }
 
-// DELETE a booking
 export async function DELETE(request, { params }) {
   try {
     const session = await getServerSession(authOptions)
@@ -109,9 +99,7 @@ export async function DELETE(request, { params }) {
       return NextResponse.json({ error: "Booking not found" }, { status: 404 })
     }
 
-    // Check if user has permission to delete this booking
     if (session.user.role === "vendor") {
-      // Get all venues owned by this vendor
       const venues = await UserInfo.find({ userId: session.user._id })
       const venueIds = venues.map((venue) => venue._id.toString())
 

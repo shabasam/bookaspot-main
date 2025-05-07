@@ -22,10 +22,10 @@ const Navbar = () => {
 
   return (
     <nav className="bg-white shadow-md py-4 px-6 flex justify-between items-center relative">
-      {/* Logo */}
+      
       <span className="text-xl font-bold text-black">BOOKaSPOT</span>
 
-      {/* Navigation Links */}
+      
       <div className="flex space-x-6">
         <Link href="/dashboard" className="nav-link text-black">
           Today
@@ -36,7 +36,7 @@ const Navbar = () => {
         </Link>
       </div>
 
-      {/* Profile Icon and Dropdown */}
+      
       <div className="relative" ref={dropdownRef}>
         <FaUserCircle
           className="text-2xl text-black cursor-pointer"
@@ -56,7 +56,7 @@ const Navbar = () => {
         )}
       </div>
 
-      {/* Hover animation for nav links */}
+      
       <style jsx>{`
         .nav-link {
           position: relative;
